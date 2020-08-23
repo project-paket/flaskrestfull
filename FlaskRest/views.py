@@ -43,4 +43,4 @@ api.add_resource(SimpleTask, '/task/<task_id>')
 api.add_resource(PostTask, '/task')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run('0.0.0.0', '8084',debug=True)

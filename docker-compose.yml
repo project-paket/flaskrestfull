@@ -1,28 +1,26 @@
 version: "3"
 
-volumes:
-  mongodb_volume:
 
 services:
   flaskrest:
     build: FlaskRest
     container_name: FlaskRest
     restart: always
-    environment:
-      - APP_NAME=MyFlaskApp
     expose:
       - 8080
+
   nginx:
     build: ./nginx
     container_name: nginx
     restart: always
     ports:
       - 80:80
-  mongodb:
+
+  mongo:
     image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin_name
-      MONGO_INITDB_ROOT_PASSWORD: 1234
+    ports:
+      - 27017:27017
     volumes:
-    - mongodb_volume/data/Test
-    restart: always
+      - mongodata:/data/Test
+volumes:
+  mongodata:

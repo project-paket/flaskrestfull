@@ -6,9 +6,11 @@ services:
   flaskrest:
     build: FlaskRest
     container_name: FlaskRest
-    restart: always
+    restart: unless-stopped
     expose:
       - 8080
+    volumes:
+      - appdata:/var/www
     depends_on:
      - mongodb
     networks:
@@ -18,9 +20,11 @@ services:
   nginx:
     build: ./nginx
     container_name: nginx
-    restart: always
+    restart: unless-stopped
     ports:
       - 80:80
+    volumes:
+      - nginxdata:/var/log/nginx
     depends_on:
      - flaskrest
     networks:
@@ -36,6 +40,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: passw0rd
       MONGO_INITDB_DATABASE: Test
       MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
     volumes:
       - mongodbdata:/data/db
     networks:
@@ -49,6 +54,10 @@ networks:
 
 volumes:
   mongodbdata:
+    driver: local
+  appdata:
+    driver: local
+  nginxdata:
     driver: local
 
 

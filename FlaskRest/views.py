@@ -4,11 +4,11 @@ from flask_restful import Resource, Api
 from pymongo import MongoClient
 
 app = Flask(__name__)
-app.config['MONGO_DBNAME'] = 'Test'
-app.config['MONGO_URL'] = 'mongodb://localhost:27017/Test'
+app.config["MONGO_URI"] = 'mongodb://root:passw0rd@localhost:27017/Test?authSource=admin'
 api = Api(app)
-mongo = MongoClient(app.config['MONGO_URL'])
-
+mongo = MongoClient(app.config["MONGO_URI"])
+print(mongo)
+db = mongo.Test
 
 class SimpleTask(Resource):
     def dict_to_mass(self, collection, task_id):
@@ -20,7 +20,7 @@ class SimpleTask(Resource):
 
     def get(self, task_id):
         print("i in get")
-        collection = mongo.Test.dev
+        collection = db.dev
         output = self.dict_to_mass(collection, task_id)
         if output:
             return jsonify({'result': output})
@@ -32,9 +32,12 @@ class SimpleTask(Resource):
 class PostTask(Resource):
     def post(self):
         print('i in post')
-        collection = mongo.Test.dev
+        collection = db.dev
+        print(collection)
         name = request.values.get('name')
+        print(name)
         collection_id = collection.insert({'name': name})
+        print(collection_id)
         output = {'_id': str(collection_id)}
         return jsonify({'result': output})
 

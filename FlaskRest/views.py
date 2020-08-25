@@ -1,13 +1,13 @@
 print('i am alive')
+import os
 from flask import jsonify, request, Flask
 from flask_restful import Resource, Api
 from pymongo import MongoClient
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = 'mongodb://root:passw0rd@localhost:27017/Test?authSource=admin'
+app.config["MONGO_URI"] = 'mongodb://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASSWORD'] + '@' + os.environ['MONGODB_HOSTNAME'] + ':27017/' + os.environ['MONGODB_DATABASE'] + '?authSource=admin'
 api = Api(app)
 mongo = MongoClient(app.config["MONGO_URI"])
-print(mongo)
 db = mongo.Test
 
 class SimpleTask(Resource):
